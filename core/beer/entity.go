@@ -5,7 +5,7 @@ type Beer struct {
 	ID    int64     `json:"id"`
 	Name  string    `json:"name"`
 	Type  BeerType  `json:"type"`
-	Stype BeerStyle `json:"stype"`
+	Style BeerStyle `json:"stype"`
 }
 
 type BeerType int
