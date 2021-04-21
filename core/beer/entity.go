@@ -1,0 +1,93 @@
+package beer
+
+//as tags json definem como os dados vão ser transformados em JSON
+type beer struct {
+	ID    int64     `json:"id"`
+	Name  string    `json:"name"`
+	Type  BeerType  `json:"type"`
+	Stype BeerStyle `json:"stype"`
+}
+
+type BeerType int
+
+const (
+	TypeAle    = 1
+	TypeLarger = 2
+	TypeMalt   = 3
+	TypeStout  = 4
+)
+
+//desta forma a funcão string pertence ao tipo e pode ser usada da seguinte forma:
+// var x TypeAle
+// fmt.Println(x.String())
+func (t BeerType) String() string {
+	switch t {
+	case TypeAle:
+		return "Ale"
+	case TypeLarger:
+		return "Larger"
+	case TypeMalt:
+		return "Malt"
+	case TypeStout:
+		return "Stout"
+	}
+	return "Unknown"
+}
+
+type BeerStyle int
+
+//usando desta forma o compilador vai automaticamente definir os ids
+//sequencialmente
+const (
+	StyleAmber = iota + 1
+	StyleBlonde
+	StyleBrown
+	StyleCrean
+	StyleDark
+	StylePale
+	StyleStrong
+	StyleWheat
+	StyleRed
+	StyleIPA
+	StyleLime
+	StylePilsner
+	StyleGolden
+	StyleFruit
+	StyleHoney
+)
+
+func (s BeerStype) String() string {
+	switch s {
+	case StyleAmber:
+		return "Amber"
+	case StyleBlonde:
+		return "Blonde"
+	case StyleBrown:
+		return "Brown"
+	case StyleCrean:
+		return "Crean"
+	case StyleDark:
+		return "Dark"
+	case StylePale:
+		return "Pale"
+	case StyleStrong:
+		return "Strong"
+	case StyleWheat:
+		return "Wheat"
+	case StyleRed:
+		return "Red"
+	case StyleIPA:
+		return "IPA"
+	case StyleLime:
+		return "Lime"
+	case StylePilsner:
+		return "Pilsner"
+	case StyleGolend:
+		return "Golden"
+	case StyleFruit:
+		return "Fruit"
+	case StyleHoney:
+		return "Honey"
+	}
+	return "Unknown"
+}
