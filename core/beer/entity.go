@@ -1,7 +1,7 @@
 package beer
 
 //as tags json definem como os dados vão ser transformados em JSON
-type beer struct {
+type Beer struct {
 	ID    int64     `json:"id"`
 	Name  string    `json:"name"`
 	Type  BeerType  `json:"type"`
