@@ -122,7 +122,7 @@ func (s *Service) Store(b *Beer) error {
 }
 
 func (s *Service) Update(b *Beer) error {
-	if b == 0 {
+	if b.ID == 0 {
 		// Podemos também um error de aplicação que criamos para definir uma
 		// condição de erro com um possível update sem WHERE
 		return fmt.Errorf("Invalid ID")
