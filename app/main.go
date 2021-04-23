@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite3", "../data/beer.db")
+	db, err := sql.Open("sqlite3", "data/beer.db")
 	if err != nil {
 		log.Fatal(err)
 	}
