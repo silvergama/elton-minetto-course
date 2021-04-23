@@ -80,7 +80,7 @@ func (s *Service) Get(ID int64) (*Beer, error) {
 	var b Beer
 
 	// o comando Prepare verifica se a consulta está válida
-	stmt, err := s.DB.Prepare("select id, name, type, style where id = ?")
+	stmt, err := s.DB.Prepare("select id, name, type, style from beer where id = ?")
 	if err != nil {
 		return nil, err
 	}

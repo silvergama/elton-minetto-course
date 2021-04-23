@@ -11,10 +11,10 @@ type Beer struct {
 type BeerType int
 
 const (
-	TypeAle    = 1
-	TypeLarger = 2
-	TypeMalt   = 3
-	TypeStout  = 4
+	TypeAle   = 1
+	TypeLager = 2
+	TypeMalt  = 3
+	TypeStout = 4
 )
 
 //desta forma a funcão string pertence ao tipo e pode ser usada da seguinte forma:
@@ -24,8 +24,8 @@ func (t BeerType) String() string {
 	switch t {
 	case TypeAle:
 		return "Ale"
-	case TypeLarger:
-		return "Larger"
+	case TypeLager:
+		return "Lager"
 	case TypeMalt:
 		return "Malt"
 	case TypeStout:
@@ -56,7 +56,7 @@ const (
 	StyleHoney
 )
 
-func (s BeerStype) String() string {
+func (s BeerStyle) String() string {
 	switch s {
 	case StyleAmber:
 		return "Amber"
@@ -82,7 +82,7 @@ func (s BeerStype) String() string {
 		return "Lime"
 	case StylePilsner:
 		return "Pilsner"
-	case StyleGolend:
+	case StyleGolden:
 		return "Golden"
 	case StyleFruit:
 		return "Fruit"
