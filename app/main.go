@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/silvergama/studying-golang/elton-minetto-course/app/handlers"
 	"github.com/silvergama/studying-golang/elton-minetto-course/core/beer"
 	"github.com/urfave/negroni"
 )
@@ -25,14 +25,14 @@ func main() {
 
 	r := mux.NewRouter()
 
-	// handlers
+	// midlewares -  código que vai ser executado em todas as requests
+	// aqui podemos colocar logs, inclusão e validação de cabeçalho, etc.
 	n := negroni.New(
 		negroni.NewLogger(),
 	)
 
-	r.Handle("/v1/beer", n.With(
-		negroni.Wrap(hello(service)),
-	)).Methods("GET", "OPTIONS")
+	// handlers
+	handlers.MakeBeerHandlers(r, n, service)
 
 	http.Handle("/", r)
 
@@ -48,13 +48,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func hello(service beer.UseCase) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		all, _ := service.GetAll()
-		for _, i := range all {
-			fmt.Println(i)
-		}
-	})
 }
