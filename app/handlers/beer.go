@@ -26,11 +26,11 @@ func MakeBeerHandlers(r *mux.Router, n *negroni.Negroni, service beer.UseCase) {
 		negroni.Wrap(storeBeer(service)),
 	)).Methods("POST", "OPTIONS")
 
-	/*
-		r.Handle("/v1/beer/{id}", n.With(
-			negroni.Wrap(updateBeer(service)),
-		)).Methods("PUT", "OPTIONS")
+	r.Handle("/v1/beer/{id}", n.With(
+		negroni.Wrap(updateBeer(service)),
+	)).Methods("PUT", "OPTIONS")
 
+	/*
 		r.Handle("/v1/beer/{id}", n.With(
 			negorni.Wrap(removeBeer(service)),
 		)).Methods("DELETE", "OPTIONS")
@@ -110,5 +110,37 @@ func storeBeer(service beer.UseCase) http.Handler {
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
+	})
+}
+
+func updateBeer(service beer.UseCase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		var b beer.Beer
+		err := json.NewDecoder(r.Body).Decode(&b)
+		if err != nil {
+			w.Write(formatJSONError("Erro ao tentar converter para JSON"))
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		vars := mux.Vars(r)
+		ID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			w.Write(formatJSONError(err.Error()))
+			w.WriteHeader(http.StatusBadRequest)
+		}
+		b.ID = ID
+
+		// Precisamos validar os dados antes de salvar na base de dados
+		err = service.Update(&b)
+		if err != nil {
+			w.Write(formatJSONError(err.Error()))
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
 	})
 }
