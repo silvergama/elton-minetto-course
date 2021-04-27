@@ -55,15 +55,12 @@ func (t BeerServiceMock) Remove(b int64) error {
 func Test_getAllBeer(t *testing.T) {
 	service := &BeerServiceMock{}
 	handler := getAllBeer(service)
-	r := mux.NewRouter()
-	r.Handle("/v1/beer", handler)
-
 	req, err := http.NewRequest("GET", "/v1/beer", nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 
 	rr := httptest.NewRecorder()
-	r.ServeHTTP(rr, req)
+	handler.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code)
 
 	var result []*beer.Beer
@@ -72,6 +69,27 @@ func Test_getAllBeer(t *testing.T) {
 	assert.Equal(t, 2, len(result))
 	assert.Equal(t, int64(10), result[0].ID)
 	assert.Equal(t, int64(20), result[1].ID)
+
+}
+
+func Test_getBeer(t *testing.T) {
+	service := &BeerServiceMock{}
+	handler := getBeer(service)
+	r := mux.NewRouter()
+	r.Handle("/v1/beer/{id}", handler)
+
+	req, err := http.NewRequest("GET", "/v1/beer/10", nil)
+	assert.Nil(t, err)
+	req.Header.Set("Accept", "application/json")
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code)
+
+	var result *beer.Beer
+	err = json.NewDecoder(rr.Body).Decode(&result)
+	assert.Nil(t, err)
+	assert.Equal(t, int64(10), result.ID)
 
 }
 
