@@ -105,8 +105,7 @@ func storeBeer(service beer.UseCase) http.Handler {
 		// Pergunta: Como fazer isso?
 		err = service.Store(&b)
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
