@@ -42,16 +42,16 @@ func getAllBeer(service beer.UseCase) http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 		all, err := service.GetAll()
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONError(err.Error()))
 			return
 		}
 
 		//vamos converter o resultado em JSON e gerar a resposta
 		err = json.NewEncoder(w).Encode(all)
 		if err != nil {
-			w.Write(formatJSONError("Erro ao tentar converter para JSON"))
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONError("Erro ao tentar converter para JSON"))
 		}
 	})
 }
@@ -66,15 +66,15 @@ func getBeer(service beer.UseCase) http.Handler {
 		vars := mux.Vars(r)
 		id, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
 			w.WriteHeader(http.StatusBadRequest)
+			w.Write(formatJSONError(err.Error()))
 			return
 		}
 
 		b, err := service.Get(id)
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
 			w.WriteHeader(http.StatusNotFound)
+			w.Write(formatJSONError(err.Error()))
 			return
 		}
 
@@ -96,8 +96,8 @@ func storeBeer(service beer.UseCase) http.Handler {
 		var b beer.Beer
 		err := json.NewDecoder(r.Body).Decode(&b)
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
 			w.WriteHeader(http.StatusBadRequest)
+			w.Write(formatJSONError(err.Error()))
 			return
 		}
 
@@ -105,7 +105,8 @@ func storeBeer(service beer.UseCase) http.Handler {
 		// Pergunta: Como fazer isso?
 		err = service.Store(&b)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONError(err.Error()))
 			return
 		}
 		w.WriteHeader(http.StatusCreated)
@@ -119,24 +120,24 @@ func updateBeer(service beer.UseCase) http.Handler {
 		var b beer.Beer
 		err := json.NewDecoder(r.Body).Decode(&b)
 		if err != nil {
-			w.Write(formatJSONError("Erro ao tentar converter para JSON"))
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONError("Erro ao tentar converter para JSON"))
 			return
 		}
 
 		vars := mux.Vars(r)
 		ID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
 			w.WriteHeader(http.StatusBadRequest)
+			w.Write(formatJSONError(err.Error()))
 		}
 		b.ID = ID
 
 		// Precisamos validar os dados antes de salvar na base de dados
 		err = service.Update(&b)
 		if err != nil {
-			w.Write(formatJSONError(err.Error()))
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONError(err.Error()))
 			return
 		}
 
